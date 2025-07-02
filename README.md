@@ -14,3 +14,8 @@ git --version
 It should show Git version (instead of “command not found”).
 You can now run:
 git init
+
+
+- rebase git
+- git pull --rebase origin main
+- git push --set-upstream origin main
