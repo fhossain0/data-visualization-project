@@ -3,10 +3,10 @@ Visual Lab Eye-Emotion Analysis  Analyze eye-tracking and facial expression data
 
 Git problem solved 
 Step-by-step fix:
-Open your RStudio terminal.
-Run this command to see your current PATH:
+
+To see your current PATH:
 echo $PATH
-You’ll probably see Conda paths at the front, and /usr/bin may be missing.
+
 To temporarily fix the PATH inside RStudio terminal right now, run:
 export PATH=/usr/bin:$PATH
 Now try:
