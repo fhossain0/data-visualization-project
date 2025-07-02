@@ -1,0 +1,50 @@
+---
+title: "Projectsub"
+author: "Md Farhad Hossain"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+
+dataset1<- get(load("stim_02_001_P-1.Rdata"))
+print(dataset1)
+
+# clumn names 
+colnames(dataset1)
+
+# Types of the 
+sapply(dataset1, class)
+```
+```{r}
+# listed All datafiles in one folder 
+file_list <- list.files(path = "Dataset", pattern = "\\.Rdata$", full.names = TRUE)
+
+
+# Initialize the empty list 
+all_data_list <- list()
+
+for (f in file_list) {
+  obj_name <- load(f)
+  df <- get(obj_name)
+  participant_id <- as.numeric(sub(".*P-(\\d+).*", "\\1", f))  # Extract ID like "P-1"
+  df$participant_id <- participant_id
+  all_data_list[[length(all_data_list) + 1]] <- df
+}
+combined_data <- do.call(rbind, all_data_list)
+
+
+#dim(combined_data)     # number of rows and columns
+#head(combined_data)       # first few rows with participant_id
+table(combined_data$participant_id)  # count rows per participant
+
+```
+
+
+
+

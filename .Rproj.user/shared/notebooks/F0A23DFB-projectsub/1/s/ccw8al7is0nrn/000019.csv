@@ -1,0 +1,86 @@
+"0","file_list <- list.files(path = ""Dataset"", pattern = ""\\.Rdata$"", full.names = TRUE)
+
+
+# Initialize the empty list 
+all_data_list <- list()
+
+for (f in file_list) {
+  obj_name <- load(f)
+  df <- get(obj_name)
+  participant_id <- as.numeric(sub("".*P-(\\d+).*"", ""\\1"", f))  # Extract ID like ""P-1""
+  df$participant_id <- participant_id
+  all_data_list[[length(all_data_list) + 1]] <- df
+}
+combined_data <- do.call(rbind, all_data_list)
+
+
+#dim(combined_data)     # number of rows and columns
+#head(combined_data)       # first few rows with participant_id
+table(combined_data$participant_id)  # count rows per participant
+"
+"1","
+"
+"1","   1 "
+"1","   2 "
+"1","   3 "
+"1","   4 "
+"1","   5 "
+"1","   6 "
+"1","   7 "
+"1","   8 "
+"1","   9 "
+"1","  10 "
+"1","  11 "
+"1","  12 "
+"1","  13 "
+"1","  14 "
+"1","  15 "
+"1","  16 "
+"1","  17 "
+"1","
+"
+"1"," 855 "
+"1"," 916 "
+"1"," 915 "
+"1"," 917 "
+"1"," 916 "
+"1"," 913 "
+"1"," 916 "
+"1"," 913 "
+"1"," 916 "
+"1"," 917 "
+"1"," 913 "
+"1"," 855 "
+"1"," 766 "
+"1"," 766 "
+"1"," 765 "
+"1"," 918 "
+"1"," 767 "
+"1","
+"
+"1","  18 "
+"1","  19 "
+"1","  20 "
+"1","  21 "
+"1","  22 "
+"1","  23 "
+"1","  24 "
+"1","  25 "
+"1","  26 "
+"1","  27 "
+"1","  28 "
+"1","
+"
+"1"," 856 "
+"1"," 918 "
+"1"," 914 "
+"1"," 915 "
+"1"," 917 "
+"1"," 768 "
+"1"," 856 "
+"1","1364 "
+"1"," 766 "
+"1"," 767 "
+"1"," 857 "
+"1","
+"
