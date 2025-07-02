@@ -3,7 +3,7 @@
     "path": "~/Desktop/stimulus-2-PythagoreanTheorem-2/projectsub.Rmd",
     "project_path": "projectsub.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "421791571",
     "contents": "",
     "dirty": false,
     "created": 1751481309552.0,
@@ -13,16 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "46,0",
-        "scrollLine": "34",
-        "last_setup_crc32": ""
+        "cursorPosition": "75,0",
+        "scrollLine": "64",
+        "last_setup_crc32": "81bd2967bb338d19"
     },
     "folds": "",
-    "lastKnownWriteTime": 1751486326,
+    "lastKnownWriteTime": 1751498782,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1751487421431,
+    "last_content_update": 1751498782612,
     "read_only": false,
     "read_only_alternatives": []
 }

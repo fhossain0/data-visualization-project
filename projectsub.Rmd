@@ -22,7 +22,7 @@ sapply(dataset1, class)
 ```
 
 
-
+### Combining all dataset to do combine task 
 ```{r}
 # listed All datafiles in one folder 
 file_list <- list.files(path = "Dataset", pattern = "\\.Rdata$", full.names = TRUE)
@@ -44,6 +44,36 @@ combined_data <- do.call(rbind, all_data_list)
 #dim(combined_data)     # number of rows and columns
 #head(combined_data)       # first few rows with participant_id
 table(combined_data$participant_id)  # count rows per participant
+
+```
+### Loading excel file Qustionaries 
+```{r}
+
+library(readxl)
+library(dplyr)
+
+# Load the Excel file
+Questionaries <- read_excel("Data-to-Bloom-Post-Survey.xlsx", sheet = 2)
+
+# Preview the data
+head(Questionaries)
+
+# Transpose the data frame
+Questionaries_t <- as.data.frame(t(Questionaries))
+
+# Fix the column names: 
+# The first row after transpose will be the question labels, so set them as column names
+colnames(Questionaries_t) <- Questionaries_t[1, ]
+
+# Remove the first row now used as headers
+Questionaries_t <- Questionaries_t[-1, ]
+
+# Optional: reset row names (now participant IDs)
+rownames(Questionaries_t) <- NULL
+
+# Preview the transposed data
+head(Questionaries_t)
+
 
 ```
 
