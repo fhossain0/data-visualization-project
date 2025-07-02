@@ -1,4 +1,5 @@
-"0","file_list <- list.files(path = ""Dataset"", pattern = ""\\.Rdata$"", full.names = TRUE)
+"0","# listed All datafiles in one folder 
+file_list <- list.files(path = ""Dataset"", pattern = ""\\.Rdata$"", full.names = TRUE)
 
 
 # Initialize the empty list 
@@ -37,6 +38,8 @@ table(combined_data$participant_id)  # count rows per participant
 "1","  15 "
 "1","  16 "
 "1","  17 "
+"1","  18 "
+"1","  19 "
 "1","
 "
 "1"," 855 "
@@ -56,10 +59,10 @@ table(combined_data$participant_id)  # count rows per participant
 "1"," 765 "
 "1"," 918 "
 "1"," 767 "
+"1"," 856 "
+"1"," 918 "
 "1","
 "
-"1","  18 "
-"1","  19 "
 "1","  20 "
 "1","  21 "
 "1","  22 "
@@ -71,8 +74,6 @@ table(combined_data$participant_id)  # count rows per participant
 "1","  28 "
 "1","
 "
-"1"," 856 "
-"1"," 918 "
 "1"," 914 "
 "1"," 915 "
 "1"," 917 "

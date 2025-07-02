@@ -9,18 +9,20 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## To understand the file content and column just run one dataset so 
 ```{r}
-
 dataset1<- get(load("stim_02_001_P-1.Rdata"))
 print(dataset1)
 
 # clumn names 
-colnames(dataset1)
+colnames(dataset1)            
 
 # Types of the 
 sapply(dataset1, class)
 ```
+
+
+
 ```{r}
 # listed All datafiles in one folder 
 file_list <- list.files(path = "Dataset", pattern = "\\.Rdata$", full.names = TRUE)
