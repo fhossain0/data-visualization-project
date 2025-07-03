@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## To understand the file content and column just run one dataset so 
 ```{r}
-dataset1<- get(load("stim_02_001_P-1.Rdata"))
+dataset1<- get(load("Dataset/stim_02_001_P-1.Rdata"))
 print(dataset1)
 
 # clumn names 
@@ -34,18 +34,47 @@ all_data_list <- list()
 for (f in file_list) {
   obj_name <- load(f)
   df <- get(obj_name)
-  participant_id <- as.numeric(sub(".*P-(\\d+).*", "\\1", f))  # Extract ID like "P-1"
-  df$participant_id <- participant_id
+  participant_id <- as.numeric(sub(".*P-(\\d+).*", "\\1", f)) # Extracting the perticipent id from the file
+  df <- cbind(participant_id = participant_id, df)  # Add participant_id as first column
   all_data_list[[length(all_data_list) + 1]] <- df
 }
 combined_data <- do.call(rbind, all_data_list)
+combined_data$Row <- NULL
+combined_data <- combined_data[, c("participant_id", setdiff(names(combined_data), "participant_id"))]
 
-
-#dim(combined_data)     # number of rows and columns
-#head(combined_data)       # first few rows with participant_id
+#dim(combined_data)                  # number of rows and columns
+#head(combined_data)                 # first few rows with participant_id
 table(combined_data$participant_id)  # count rows per participant
+print("Shape of the dataframe:")
+print(dim(combined_data))
+
+print(head(combined_data))
 
 ```
+### Cleaning the dataset
+```{r}
+
+for (col in colnames(combined_data)) {
+  # Check if column is character
+  if (is.character(combined_data[[col]])) {
+    # Try to convert to numeric, suppress warnings temporarily
+    converted <- suppressWarnings(as.numeric(combined_data[[col]]))
+    
+    # Check if conversion produced mostly valid numbers (non-NA)
+    non_na_ratio <- sum(!is.na(converted)) / length(converted)
+    
+    # If most values converted properly (e.g., >90%), assign back as numeric
+    if (non_na_ratio > 0.9) {
+      combined_data[[col]] <- converted
+    }
+  }
+}
+
+str(combined_data)
+dim(combined_data)
+```
+
+
 ### Loading excel file Qustionaries 
 ```{r}
 
@@ -56,14 +85,13 @@ library(dplyr)
 Questionaries <- read_excel("Data-to-Bloom-Post-Survey.xlsx", sheet = 2)
 
 # Preview the data
-head(Questionaries)
+#head(Questionaries)
 
 # Transpose the data frame
 Questionaries_t <- as.data.frame(t(Questionaries))
-
 # Fix the column names: 
 # The first row after transpose will be the question labels, so set them as column names
-colnames(Questionaries_t) <- Questionaries_t[1, ]
+colnames(Questionaries_t) <- Questionaries_t[1,]
 
 # Remove the first row now used as headers
 Questionaries_t <- Questionaries_t[-1, ]
@@ -73,8 +101,8 @@ rownames(Questionaries_t) <- NULL
 
 # Preview the transposed data
 head(Questionaries_t)
-
-
+dim(Questionaries_t)
+str(df)
 ```
 
 
