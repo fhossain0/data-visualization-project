@@ -56,24 +56,6 @@ print(colnames(combined_data))
 ### Cleaning the dataset
 ```{r}
 
-for (col in colnames(combined_data)) {
-  # Check if column is character
-  if (is.character(combined_data[[col]])) {
-    # Try to convert to numeric, suppress warnings temporarily
-    converted <- suppressWarnings(as.numeric(combined_data[[col]]))
-    
-    # Check if conversion produced mostly valid numbers (non-NA)
-    non_na_ratio <- sum(!is.na(converted)) / length(converted)
-    
-    # If most values converted properly (e.g., >90%), assign back as numeric
-    if (non_na_ratio > 0.9) {
-      combined_data[[col]] <- converted
-    }
-  }
-}
-
-str(combined_data)
-dim(combined_data)
 ```
 
 
@@ -82,30 +64,52 @@ dim(combined_data)
 
 library(readxl)
 library(dplyr)
+library(stringr)
 
 # Load the Excel file
 Questionaries <- read_excel("Data-to-Bloom-Post-Survey.xlsx", sheet = 2)
 
-# Preview the data
-#head(Questionaries)
-
 # Transpose the data frame
 Questionaries_t <- as.data.frame(t(Questionaries))
-# Fix the column names: 
+
 # The first row after transpose will be the question labels, so set them as column names
 colnames(Questionaries_t) <- Questionaries_t[1,]
 
 # Remove the first row now used as headers
 Questionaries_t <- Questionaries_t[-1, ]
-
-# Optional: reset row names (now participant IDs)
 rownames(Questionaries_t) <- NULL
+Questionaries_t$Participants <- as.numeric(gsub("P", "", Questionaries_t$Participants))
+# Remove columns where all values are NA or blank
+Questionaries_t <- Questionaries_t[, colSums(is.na(Questionaries_t) | Questionaries_t == "") < nrow(Questionaries_t)]
 
-# Preview the transposed data
-head(Questionaries_t)
-dim(Questionaries_t)
-str(df)
+colnames(Questionaries_t) <- str_squish(colnames(Questionaries_t))
 
+
+# Remove rows where all columns are NA or empty strings
+Questionaries_t_clean <- Questionaries_t[rowSums(is.na(Questionaries_t) | Questionaries_t == "") != ncol(Questionaries_t), ]
+
+print(colnames(Questionaries_t))
+
+# Filter only participants with number between 2 and 28 (assuming 27 participants starting from P2)
+cols_to_convert <- c(
+  "Participants",
+  "Did you remember the details? (on a scale 1-10, 10 the best)",
+  "Did you understand the flaw in the argument with Pythagoras and the measuring tape? (scale 1-10)",
+  "Was that interesting to you? (on a scale, 1 -10)",
+  "Before the quiz - did you think that you understood how they did it?",
+  "After the quiz - how sure were you about the correctness of your answers?",
+  "How would you assess your cognitive stress level when reading the cosine-explanation?",
+  "On which scale (1-10, 10 meaning you could apply it)"
+)
+
+for (col in cols_to_convert) {
+  Questionaries_t[[col]] <- as.numeric(Questionaries_t[[col]])
+}
+
+# Check the structure after conversion
+str(Questionaries_t[cols_to_convert])
+
+dim(Questionaries_t_clean)
 ```
 
 
