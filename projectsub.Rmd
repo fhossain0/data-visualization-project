@@ -57,7 +57,7 @@ print(dim(combined_data))
 ```{r}
 
 selected_columns <- combined_data[
-  , c("participant_id",
+  , c("participant_id","Timestamp",
       "Anger", "Contempt", "Disgust", "Fear", "Joy", "Sadness", "Surprise",
       "Engagement", "Sentimentality", "Confusion", "Neutral", "Attention",
       "Brow_Furrow", "Brow_Raise", "Cheek_Raise", "Chin_Raise",
@@ -74,11 +74,14 @@ rownames(selected_columns) <- NULL  # Reset row numbers starting from 1
 selected_columns[] <- lapply(selected_columns, function(x) as.numeric(as.character(x)))
 selected_columns[is.na(selected_columns)] <- 0
 selected_columns <- selected_columns[!apply(selected_columns, 1, function(row) any(row == 0)), ]
+selected_columns$time_seconds <- selected_columns$Timestamp / 1000
+selected_columns$Timestamp <- NULL # dropping the timestepm column 
 rownames(selected_columns) <- NULL  # Reset row numbers
-
-str(selected_columns)
+# Create a new dataframe with time_seconds moved to 2nd column
+selected_columns <- selected_columns[c("participant_id", "time_seconds", setdiff(names(selected_columns), c("participant_id", "time_seconds")))]
 
 View(selected_columns)
+str(selected_columns)
 
 
 ```
