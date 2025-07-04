@@ -50,18 +50,42 @@ print(dim(combined_data))
 
 # print(head(combined_data, 100))
 
-print(colnames(combined_data))
+
 
 ```
-### Cleaning the dataset
+## column selection and cleaning
 ```{r}
+
+selected_columns <- combined_data[
+  , c("participant_id",
+      "Anger", "Contempt", "Disgust", "Fear", "Joy", "Sadness", "Surprise",
+      "Engagement", "Sentimentality", "Confusion", "Neutral", "Attention",
+      "Brow_Furrow", "Brow_Raise", "Cheek_Raise", "Chin_Raise",
+      "Eye_Closure", "Eye_Widen", "Inner_Brow_Raise", "Jaw_Drop",
+      "Lip_Corner_Depressor", "Lip_Press", "Lip_Pucker", "Lip_Stretch",
+      "Lip_Suck", "Lid_Tighten", "Mouth_Open", "Nose_Wrinkle",
+      "Smile", "Smirk", "Upper_Lip_Raise",
+      "Pitch", "Yaw", "Roll")
+]
+#"Valence","Dimpler", "Blink","BlinkRate"
+Questionaries_t_clean <- selected_columns[rowSums(is.na(selected_columns) | selected_columns == "") != ncol(selected_columns), ]
+selected_columns <- selected_columns[selected_columns$participant_id != 1, ]
+rownames(selected_columns) <- NULL  # Reset row numbers starting from 1
+selected_columns[] <- lapply(selected_columns, function(x) as.numeric(as.character(x)))
+selected_columns[is.na(selected_columns)] <- 0
+selected_columns <- selected_columns[!apply(selected_columns, 1, function(row) any(row == 0)), ]
+rownames(selected_columns) <- NULL  # Reset row numbers
+
+str(selected_columns)
+
+View(selected_columns)
+
 
 ```
 
 
 ### Loading excel file Qustionaries 
 ```{r}
-
 library(readxl)
 library(dplyr)
 library(stringr)
@@ -77,39 +101,48 @@ colnames(Questionaries_t) <- Questionaries_t[1,]
 
 # Remove the first row now used as headers
 Questionaries_t <- Questionaries_t[-1, ]
-rownames(Questionaries_t) <- NULL
+#rownames(Questionaries_t) <- NULL
+
+
 Questionaries_t$Participants <- as.numeric(gsub("P", "", Questionaries_t$Participants))
+
 # Remove columns where all values are NA or blank
 Questionaries_t <- Questionaries_t[, colSums(is.na(Questionaries_t) | Questionaries_t == "") < nrow(Questionaries_t)]
 
+
+# str_squish removes unnecessary spaces
 colnames(Questionaries_t) <- str_squish(colnames(Questionaries_t))
 
+# Loop through each column in the data frame
 
-# Remove rows where all columns are NA or empty strings
-Questionaries_t_clean <- Questionaries_t[rowSums(is.na(Questionaries_t) | Questionaries_t == "") != ncol(Questionaries_t), ]
-
-print(colnames(Questionaries_t))
-
+for (col in colnames(Questionaries_t)) {
+  cat("\n--- Unique values in column:", col, "---\n")
+ # print(unique(Questionaries_t[[col]]))
+}
 # Filter only participants with number between 2 and 28 (assuming 27 participants starting from P2)
 cols_to_convert <- c(
   "Participants",
   "Did you remember the details? (on a scale 1-10, 10 the best)",
   "Did you understand the flaw in the argument with Pythagoras and the measuring tape? (scale 1-10)",
   "Was that interesting to you? (on a scale, 1 -10)",
-  "Before the quiz - did you think that you understood how they did it?",
   "After the quiz - how sure were you about the correctness of your answers?",
   "How would you assess your cognitive stress level when reading the cosine-explanation?",
   "On which scale (1-10, 10 meaning you could apply it)"
 )
-
 for (col in cols_to_convert) {
   Questionaries_t[[col]] <- as.numeric(Questionaries_t[[col]])
 }
 
-# Check the structure after conversion
-str(Questionaries_t[cols_to_convert])
+# Remove rows where all columns are NA or empty strings
+Questionaries_t_clean <- Questionaries_t[rowSums(is.na(Questionaries_t) | Questionaries_t == "") != ncol(Questionaries_t), ]
+rownames(Questionaries_t_clean) <- NULL
 
-dim(Questionaries_t_clean)
+
+colnames(Questionaries_t_clean)[colnames(Questionaries_t_clean) == "Participants"] <- "participant_id" # changing the name of participent to participent_id 
+print(Questionaries_t_clean)
+
+
+
 ```
 
 
