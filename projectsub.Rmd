@@ -48,7 +48,9 @@ table(combined_data$participant_id)  # count rows per participant
 print("Shape of the dataframe:")
 print(dim(combined_data))
 
-print(head(combined_data))
+# print(head(combined_data, 100))
+
+print(colnames(combined_data))
 
 ```
 ### Cleaning the dataset
@@ -103,6 +105,7 @@ rownames(Questionaries_t) <- NULL
 head(Questionaries_t)
 dim(Questionaries_t)
 str(df)
+
 ```
 
 
